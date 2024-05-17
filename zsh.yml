@@ -1,0 +1,51 @@
+- hosts: localhost
+  tasks:
+    - name: Install zsh
+      become: true
+      apt:
+        force_apt_get: true
+        update_cache: true
+        name: zsh
+
+    - name: Check ~/.oh-my-zsh directory is exist
+      stat:
+        path: ~/.oh-my-zsh
+      register: res
+
+    - name: Download and install OhMyZsh 
+      shell: curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | sh
+      when: res.stat.isdir is not defined
+
+    - name: check ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions directory is exist
+      stat:
+        path: ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions 
+      register: res
+
+    - name: Install autosuggestion plugin
+      ansible.builtin.git:
+        repo: 'https://github.com/zsh-users/zsh-autosuggestions.git'
+        dest: '~/.oh-my-zsh/custom/plugins/zsh-autosuggestions'
+      when: res.stat.isdir is not defined
+
+    - name: check ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting directory is exist
+      stat:
+        path: ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting 
+      register: res
+
+    - name: Download and install syntax highlighting plugin
+      ansible.builtin.git:
+        repo: 'https://github.com/zsh-users/zsh-syntax-highlighting.git'
+        dest: '~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting'
+      when: res.stat.isdir is not defined
+
+    - name: check ~/.oh-my-zsh/custom/themes/powerlevel10k directory is exist
+      stat:
+        path: ~/.oh-my-zsh/custom/themes/powerlevel10k 
+      register: res
+
+    - name: Download and install theme
+      ansible.builtin.git:
+        repo: 'https://github.com/romkatv/powerlevel10k.git'
+        dest: '~/.oh-my-zsh/custom/themes/powerlevel10k'
+        depth: 1
+      when: res.stat.isdir is not defined

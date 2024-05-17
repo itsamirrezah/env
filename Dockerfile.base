@@ -2,6 +2,6 @@ FROM debian:bookworm
 
 RUN apt-get update && \
     apt-get upgrade -y && \
-    apt-get install -y software-properties-common curl git build-essential curl git ansible sudo &&\
+    apt-get install -y software-properties-common curl git build-essential curl git ansible stow sudo &&\
     apt-get clean autoclean && \
     apt-get autoremove --yes
