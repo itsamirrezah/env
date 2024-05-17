@@ -1,0 +1,12 @@
+FROM ansible.base AS base
+
+FROM base AS meursault
+RUN addgroup --gid 1000 meursault
+RUN adduser --gecos meursault --uid 1000 --gid 1000 --disabled-password meursault
+RUN adduser meursault sudo
+RUN echo "meursault ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+USER meursault
+WORKDIR /home/meursault
+
+FROM meursault
+COPY . .
