@@ -1,0 +1,45 @@
+- hosts: localhost
+  tasks:
+    - name: Check if neovim is already installed
+      stat:
+        path: /usr/local/bin/nvim
+      register: res
+      failed_when: res.stat.exists
+
+    - name: Install neovim dependencies 
+      become: true
+      apt:
+        force_apt_get: true
+        update_cache: true
+        pkg:
+        - ninja-build
+        - gettext
+        - cmake
+        - unzip
+        - curl
+        - build-essential
+
+    - name: Check if neovim has been cloned already
+      stat:
+        path: /tmp/neovim
+      register: res
+
+    - name: Clone neovim repo
+      ansible.builtin.git:
+        repo: 'https://github.com/neovim/neovim.git'
+        dest: '/tmp/neovim'
+        depth: 1
+        version: stable
+      when: res.stat.isdir is not defined
+
+    - name: Build from source 
+      become: true
+      ansible.builtin.command: make install
+      args:
+        chdir: "/tmp/neovim" 
+
+    - name: Install nvim plugin manager
+      ansible.builtin.git:
+        repo: 'https://github.com/wbthomason/packer.nvim.git'
+        dest: '~/.local/share/nvim/site/pack/packer/start/packer.nvim'
+        depth: 1
