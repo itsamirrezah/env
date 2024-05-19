@@ -1,0 +1,34 @@
+- hosts: localhost
+  tasks:
+    - name: Check if alacritty is already installed
+      shell: command -v ~/.cargo/bin/alacritty
+      register: res
+      failed_when: res is not failed
+
+    - name: Install alacritty dependencies 
+      become: true
+      apt:
+        force_apt_get: true
+        update_cache: true
+        pkg:
+          - cmake
+          - pkg-config
+          - libfreetype6-dev
+          - libxcb-xfixes0-dev
+          - libxkbcommon-dev
+          - python3
+          - fontconfig
+          - libfontconfig1-dev
+
+    - name: Download rustup 
+      get_url:
+        url: "https://sh.rustup.rs"
+        dest: /tmp/sh.rustup.rs
+        mode: '0755'
+        force: 'yes'
+
+    - name: Install rust
+      shell: /tmp/sh.rustup.rs -y
+
+    - name: Install alacritty
+      shell: ~/.cargo/bin/cargo install alacritty
