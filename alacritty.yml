@@ -2,8 +2,13 @@
   tasks:
     - name: Check if alacritty is already installed
       shell: command -v ~/.cargo/bin/alacritty
-      register: res
-      failed_when: res is not failed
+      register: alacritty_exist
+      failed_when: alacritty_exist is not failed
+
+    - name: Check if rust is installed
+      shell: command -v ~/.cargo/bin/cargo
+      register: cargo_exist 
+      ignore_errors: yes
 
     - name: Install alacritty dependencies 
       become: true
@@ -26,9 +31,11 @@
         dest: /tmp/sh.rustup.rs
         mode: '0755'
         force: 'yes'
+      when: cargo_exist is failed
 
     - name: Install rust
       shell: /tmp/sh.rustup.rs -y
+      when: cargo_exist is failed
 
     - name: Install alacritty
       shell: ~/.cargo/bin/cargo install alacritty

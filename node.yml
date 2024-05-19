@@ -1,0 +1,30 @@
+- hosts: localhost
+  tasks:
+    - name: Check if fnm is already installed
+      shell: command -v ~/.cargo/bin/fnm
+      register: fnm_exist
+      ignore_errors: yes
+
+    - name: Check if rust is installed
+      shell: command -v ~/.cargo/bin/cargo
+      register: cargo_exist 
+      ignore_errors: yes
+
+    - name: Download rustup
+      get_url:
+        url: "https://sh.rustup.rs"
+        dest: /tmp/sh.rustup.rs
+        mode: '0755'
+        force: 'yes'
+      when: cargo_exist is failed
+
+    - name: Install rust 
+      shell: /tmp/sh.rustup.rs -y
+      when: cargo_exist is failed
+
+    - name: Install fnm
+      shell: ~/.cargo/bin/cargo install fnm
+      when: fnm_exist is failed
+
+    - name: Install node 
+      shell: ~/.cargo/bin/fnm install 20
