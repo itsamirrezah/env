@@ -1,0 +1,15 @@
+- hosts: localhost
+  tasks:
+    - name: Install docker and docker compose 
+      become: true
+      apt:
+        force_apt_get: true
+        update_cache: true
+        pkg:
+          - docker
+          - docker-compose
+
+    - name: Pull databases 
+      become: true
+      shell: echo "postgres mongo redis" | xargs -n1 docker pull
+  
