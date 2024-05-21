@@ -1,0 +1,41 @@
+- hosts: localhost
+  tasks:
+    - name: Install git
+      become: true
+      apt:
+        force_apt_get: true
+        update_cache: true
+        name: git
+
+    - name: Check if delta is already installed
+      shell: command -v ~/.cargo/bin/delta
+      register: delta_exist
+      ignore_errors: yes
+
+    - name: Check if rust is installed
+      shell: command -v ~/.cargo/bin/cargo
+      register: cargo_exist 
+      ignore_errors: yes
+
+    - name: Download rustup 
+      get_url:
+        url: "https://sh.rustup.rs"
+        dest: /tmp/sh.rustup.rs
+        mode: '0755'
+        force: 'yes'
+      when: cargo_exist is failed
+
+    - name: Install rust
+      shell: /tmp/sh.rustup.rs -y
+      when: cargo_exist is failed
+
+    - name: Install delta
+      shell: ~/.cargo/bin/cargo install git-delta
+      when: delta_exist is failed 
+
+    - name: Download and install github cli
+      become: true
+      apt:
+        force_apt_get: true
+        update_cache: true
+        deb: "https://github.com/cli/cli/releases/download/v2.49.0/gh_2.49.0_linux_amd64.deb"
