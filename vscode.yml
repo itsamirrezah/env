@@ -1,0 +1,12 @@
+- hosts: localhost
+  tasks:
+    - name: Download vscode
+      shell: curl --continue-at - -L "https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64" -o /tmp/vscode.deb
+
+    - name: Install vscode
+      become: true
+      apt:
+        force_apt_get: true
+        update-cache: true
+        dpkg_options: 'force-confold,force-confdef'
+        deb: /tmp/vscode.deb
