@@ -1,0 +1,33 @@
+- hosts: localhost
+  tasks:
+    - name: Install dependencies
+      become: true
+      apt: 
+        force_apt_get: true
+        update-cache: true
+        pkg:
+          - libc6:i386
+          - libncurses5:i386
+          - libstdc++6:i386
+          - lib32z1
+          - libbz2-1.0:i386
+
+    - name: Download android studio
+      shell: curl --continue-at - -L https://redirector.gvt1.com/edgedl/android/studio/ide-zips/2023.3.1.18/android-studio-2023.3.1.18-linux.tar.gz -o /tmp/android-studio.tar.gz
+
+    - name: Extract android studio into /opt
+      become: true
+      shell: tar -xzf /tmp/android-studio.tar.gz -C /opt
+
+    # - name: Download Android Sdk1
+    #   shell: curl --continue-at -L https://dl.google.com/android/repository/sys-img/google_apis/x86_64-34_r13.zip -o /tmp/x86_64.zip
+    # - name: Download Android Sdk2
+    #   shell: curl --continue-at -L https://dl.google.com/android/repository/sources-34_r01.zip -o /tmp/sources.zip
+    # - name: Download Android Sdk3
+    #   shell: curl --continue-at -L https://dl.google.com/android/repository/build-tools_r34-linux.zip -o /tmp/build-tools.zip
+    # - name: Download Android Sdk4
+    #   shell: curl --continue-at -L https://dl.google.com/android/repository/platform-34-ext7_r03.zip -o /tmp/platform.zip
+    # - name: Download Android Sdk5
+    #   shell: curl --continue-at -L https://dl.google.com/android/repository/platform-tools_r35.0.1-linux.zip -o /tmp/platform-tools.zip
+    # - name: Download Android Sdk6
+    #   shell: curl --continue-at -L https://dl.google.com/android/repository/emulator-linux_x64-11772612.zip -o /tmp/emulator.zip

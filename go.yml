@@ -1,0 +1,16 @@
+- hosts: localhost
+  tasks:
+    - name: Download golang
+      shell: curl --continue-at - -L https://dl.google.com/go/go1.22.3.linux-amd64.tar.gz -o /tmp/golang22.tar.gz
+
+    - name: Remove old version
+      become: true
+      ansible.builtin.file:
+        path: /opt/go
+        state: absent
+
+    - name: Extract golang into /opt
+      become: true
+      ansible.builtin.unarchive:
+        src: /tmp/golang22.tar.gz
+        dest: /opt
