@@ -1,0 +1,12 @@
+- hosts: localhost
+  tasks:
+    - name: Download Obsidian 
+      shell: curl --continue-at - -L https://github.com/obsidianmd/obsidian-releases/releases/download/v1.5.12/obsidian_1.5.12_amd64.deb -o /tmp/obsidian.deb
+
+    - name: Install Obsidian
+      become: true
+      apt:
+        force_apt_get: true
+        update-cache: true
+        dpkg_options: 'force-confold,force-confdef'
+        deb: /tmp/obsidian.deb
