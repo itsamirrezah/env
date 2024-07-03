@@ -1,0 +1,14 @@
+- hosts: localhost
+  tasks:
+    - name: Download Postman
+      shell: curl --continue-at - -L https://dl.pstmn.io/download/latest/linux64 -o /tmp/postman.tar.gz
+
+    - name: Extract Postman into /opt
+      become: true
+      shell: tar -xzf /tmp/postman.tar.gz -C /opt
+
+    - name: Copy Desktop Entry
+      become: true
+      copy:
+        src: assets/postman.desktop
+        dest: /usr/share/applications
