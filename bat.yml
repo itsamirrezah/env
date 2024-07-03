@@ -1,0 +1,12 @@
+- hosts: localhost
+  tasks:
+    - name: Install bat
+      become: true
+      apt:
+        force_apt_get: true
+        update_cache: true
+        name: bat
+
+    - name: Symlink bat to batcat
+      become: true
+      shell: ln -s /usr/bin/batcat /usr/bin/bat
