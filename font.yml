@@ -1,0 +1,87 @@
+- hosts: localhost
+  tasks:
+    - name: Install fontconfig
+      become: true
+      apt:
+        force_apt_get: true
+        update_cache: true
+        name: fontconfig
+
+    - name: Create .local/share/fonts directory if not exist
+      shell: mkdir -p ~/.local/share/fonts
+
+    - name: Download Font-Awesome
+      shell: curl --continue-at - -L https://github.com/FontAwesome/Font-Awesome/archive/6.5.2.tar.gz -o /tmp/font-awesome.tar.gz
+
+    - name: Install Font-Awesome
+      shell: tar -xzf /tmp/font-awesome.tar.gz --strip-components 1 -C /tmp/font-awesome
+
+    - name: Install Font-Awesome
+      shell: mkdir -p ~/.local/share/fonts && find /tmp/font-awesome/webfonts -iname '*.ttf' -exec mv {} ~/.local/share/fonts \;
+    
+    - name: Download JetBrains Mono Font
+      shell: curl --continue-at - -L https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.tar.xz -o /tmp/jetbrains-mono.tar.xz
+
+    - name: Install fonts
+      shell: tar -xvf /tmp/jetbrains-mono-ttf.tar.xz -C ~/.local/share/fonts
+
+    - name: Download VazirMatn
+      shell: curl --continue-at - -L https://github.com/rastikerdar/vazirmatn/releases/download/v33.003/vazirmatn-v33.003.zip -o /tmp/vazirmatn.zip
+
+    - name: unzip vazirmatn
+      shell: unzip /tmp/vazirmatn.zip -d /tmp/vazirmatn
+
+    - name: Download FiraCode
+      shell: curl --continue-at - -L https://github.com/tonsky/FiraCode/releases/download/6.2/Fira_Code_v6.2.zip -o /tmp/firacode.zip
+
+    # - name: Download JetBrains Mono Font
+    #   get_url:
+    #     url: "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.tar.xz"
+    #     dest: /tmp/jetbrains-mono-ttf.tar.xz
+    #     mode: '0755'
+    #     force: 'yes'
+    # - name: Install fonts
+    #   shell: tar -xvf /tmp/jetbrains-mono-ttf.tar.xz -C ~/.local/share/fonts
+    # - name: Download VazirMatn
+    #   get_url:
+    #     url: "https://github.com/rastikerdar/vazirmatn/releases/download/v33.003/vazirmatn-v33.003.zip"
+    #     dest: /tmp/vazirmatn.zip
+    #     mode: "0755"
+    #     force: "yes"
+    # - name: Download FiraCode
+    #   get_url:
+    #     url: "https://github.com/tonsky/FiraCode/releases/download/6.2/Fira_Code_v6.2.zip"
+    #     dest: /tmp/firacode-font.zip
+    #     mode: '0755'
+    #     force: 'yes'
+    # - name: unzip
+    #   shell: unzip -o -d /tmp/firacode-orginial /tmp/firacode-font.zip
+    # - name: Install Font
+    #   shell: find /tmp/firacode-orginial -iname '*.ttf' -exec mv {} ~/.local/share/fonts \;
+    # - name: Download FiraCodeNerd Font
+    #   get_url:
+    #     url: "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/FiraCode.tar.xz"
+    #     dest: /tmp/firacode.tar.xz
+    #     mode: '0755'
+    #     force: 'yes'
+    # - name: Install fonts
+    #   shell: tar -xvf /tmp/firacode.tar.xz -C ~/.local/share/fonts
+
+    # - name: Download VazirMatn
+    #   get_url:
+    #     url: "https://github.com/rastikerdar/vazirmatn/releases/download/v33.003/vazirmatn-v33.003.zip"
+    #     dest: /tmp/vazirmatn.zip
+    #     mode: "0755"
+    #     force: "yes"
+    # - name: mkdir
+    #   shell: mkdir /tmp/vazirmatn
+    #
+    # - name: unzip vazirmatn
+    #   shell: unzip /tmp/vazirmatn.zip -d /tmp/vazirmatn
+    # 
+    # - name: Install fonts
+    #   shell: find /tmp/vazirmatn -iname '*.ttf' -exec mv {} ~/.local/share/fonts \;
+    
+    - name: Build font information cache files
+      shell: fc-cache -f -v
+

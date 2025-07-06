@@ -1,0 +1,23 @@
+- hosts: localhost
+  tasks:
+    - name: Check if fzf is already installed
+      shell: command -v fzf
+      register: res
+      failed_when: res is not failed
+
+    - name: Check if fzf has been cloned already
+      stat:
+        path: /opt/fzf
+      register: res
+
+    - name: Clone fzf repo
+      become: true
+      ansible.builtin.git:
+        repo: 'https://github.com/junegunn/fzf.git'
+        dest: '/opt/fzf'
+        depth: 1
+      when: res.stat.isdir is not defined
+
+    - name: install fzf
+      become: true
+      shell: /opt/fzf/install --bin

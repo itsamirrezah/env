@@ -1,0 +1,17 @@
+- hosts: localhost
+  tasks:
+    - name: Download zen browser 
+      shell: curl --continue-at - -L https://github.com/zen-browser/desktop/releases/download/1.0.2-b.5/zen.linux-x86_64.tar.bz2 -o /tmp/zen-browser.bz2
+    - name: Extract Zen Browser into /opt
+      become: true
+      shell: tar -xvjf /tmp/zen-browser.bz2 -C /opt
+
+    # - name: Copy Desktop Entry
+    #   become: true
+    #   copy:
+    #     src: assets/zen.desktop
+    #     dest: /usr/share/applications
+    # 
+    # - name: Symlink Zen
+    #   become: true
+    #   shell: ln -s /opt/zen/zen /usr/bin/zen

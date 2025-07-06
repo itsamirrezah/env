@@ -1,0 +1,17 @@
+- hosts: localhost
+  tasks:
+    - name: Download yt-dlp
+      get_url:
+        url: "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp"
+        dest: /tmp/yt-dlp
+        force: "yes"
+    - name: add execute permission
+      file:
+        path: /tmp/yt-dlp
+        mode: "u+x,g+x,o+x"
+    - name: copy to /usr/bin/
+      become: true
+      copy:
+        src: /tmp/yt-dlp
+        dest: /usr/bin/yt-dlp
+        mode: "u+x,g+x,o+x"
